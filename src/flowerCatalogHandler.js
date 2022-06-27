@@ -1,24 +1,41 @@
-const commentHandler = ({ params }, response) => {
-  const { name, comment } = params;
-  // let statusCode = 302;
-  // let location = getFileName(pokemonType);
-  // if (!name && !comment) {
-  //   statusCode = 301;
-  //   location = '/index.html';
-  // }
+const fs = require('fs');
+const { generateTable } = require('./generateTable.js');
 
-  response.setHeader('content-type', 'text/plain');
-  response.send(`${name}: ${comment}`);
-  return true;
+const parseComment = ({ name, comment }) => {
+  return {
+    name,
+    comment,
+    dateTime: new Date().toString()
+  };
 };
 
-const flowerCatalogHandler = (request, response) => {
-  const { uri } = request;
-  if (uri === '/add-comment') {
-    commentHandler(request, response);
+const createCommentHandler = (commentsFile, comments) => {
+  return ({ params }, response) => {
+    comments.push(parseComment(params));
+    fs.writeFileSync(commentsFile, JSON.stringify(comments), 'utf8');
+
+    response.setHeader('content-type', 'text/html');
+    response.send(`${generateTable(comments)}`);
     return true;
-  }
-  return false;
+  };
 };
 
-exports.flowerCatalogHandler = flowerCatalogHandler;
+const createFlowerCatalogHandler = (commentsFile) => {
+  let commentsString = fs.readFileSync(commentsFile, 'utf8');
+  let comments = [];
+  if (commentsString.length > 0) {
+    comments = JSON.parse(commentsString);
+  }
+
+  return (request, response) => {
+    const { uri } = request;
+    if (uri === '/add-comment') {
+      const commentHandler = createCommentHandler(commentsFile, comments);
+      commentHandler(request, response);
+      return true;
+    }
+    return false;
+  };
+};
+
+exports.createFlowerCatalogHandler = createFlowerCatalogHandler;
