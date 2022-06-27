@@ -10,7 +10,9 @@ const determineContentType = (fileName) => {
     css: 'text/css',
     html: 'text/html',
     js: 'text/javascript',
-    png: 'image/png'
+    png: 'image/png',
+    gif: 'image/gif',
+    pdf: 'application/pdf'
   };
 
   return mimeTypes[getExtension(fileName)] || 'text/plain';
