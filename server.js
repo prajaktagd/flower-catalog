@@ -36,7 +36,9 @@ const startServer = (PORT, handler) => {
 };
 
 const main = (serveFrom) => {
-  const flowerCatalogHandler = createFlowerCatalogHandler('./data/comments.json');
+  const flowerCatalogHandler =
+    createFlowerCatalogHandler('./data/comments.json',
+      './resources/guest-book-template.html');
   const serveFileContent = createFileContentServer(serveFrom);
   const handlers = [flowerCatalogHandler, serveFileContent,
     fileNotFoundHandler];

@@ -14,14 +14,26 @@ const createCommentHandler = (commentsFile, comments) => {
     comments.push(parseComment(params));
     fs.writeFileSync(commentsFile, JSON.stringify(comments), 'utf8');
 
-    response.setHeader('content-type', 'text/html');
-    response.send(`${generateTable(comments)}`);
+    response.statusCode = 302;
+    response.setHeader('location', '/guest-book');
+    response.send('');
     return true;
   };
 };
 
-const createFlowerCatalogHandler = (commentsFile) => {
+const createGuestBookHandler = (template, comments) => {
+  return (request, response) => {
+    const html = template.replace('__TABLE__', generateTable(comments));
+    response.setHeader('content-type', 'text/html');
+    response.send(html);
+    return true;
+  };
+};
+
+const createFlowerCatalogHandler = (commentsFile, guestBookTemplateFile) => {
   let commentsString = fs.readFileSync(commentsFile, 'utf8');
+  let template = fs.readFileSync(guestBookTemplateFile, 'utf8');
+
   let comments = [];
   if (commentsString.length > 0) {
     comments = JSON.parse(commentsString);
@@ -29,6 +41,11 @@ const createFlowerCatalogHandler = (commentsFile) => {
 
   return (request, response) => {
     const { uri } = request;
+    if (uri === '/guest-book') {
+      const guestBookHandler = createGuestBookHandler(template, comments);
+      guestBookHandler(request, response);
+      return true;
+    }
     if (uri === '/add-comment') {
       const commentHandler = createCommentHandler(commentsFile, comments);
       commentHandler(request, response);
