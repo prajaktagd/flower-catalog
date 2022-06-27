@@ -3,6 +3,7 @@ const { createServer, Socket } = require('net');
 const { parseRequest } = require('./src/parseRequest.js');
 const { Response } = require('./src/response.js');
 const { createHandler } = require('./src/createHandler');
+const { flowerCatalogHandler } = require('./src/flowerCatalogHandler.js');
 const { createFileContentServer } = require('./src/serveFileContent.js');
 const { fileNotFoundHandler } = require('./src/fileNotFoundHandler.js');
 
@@ -36,7 +37,7 @@ const startServer = (PORT, handler) => {
 
 const main = (serveFrom) => {
   const serveFileContent = createFileContentServer(serveFrom);
-  const handlers = [serveFileContent, fileNotFoundHandler];
+  const handlers = [flowerCatalogHandler, serveFileContent, fileNotFoundHandler];
   startServer(9999, createHandler(handlers));
 };
 
