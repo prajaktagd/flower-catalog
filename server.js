@@ -3,7 +3,8 @@ const { createServer } = require('net');
 const { parseRequest } = require('./src/parseRequest.js');
 const { Response } = require('./src/response.js');
 const { createHandler } = require('./src/createHandler');
-const { createFlowerCatalogHandler } = require('./src/flowerCatalogHandler.js');
+const { createGuestBookDataLoader } = require('./src/loadGuestBookData.js');
+const { guestBookHandler } = require('./src/guestBookHandler.js');
 const { createFileContentServer } = require('./src/serveFileContent.js');
 const { fileNotFoundHandler } = require('./src/fileNotFoundHandler.js');
 
@@ -41,10 +42,10 @@ const startServer = (PORT, handler) => {
 const main = (serveFrom) => {
   const commentsFile = './data/comments.json';
   const templateFile = './resources/guest-book-template.html';
-  const flowerCatalogHandler = createFlowerCatalogHandler(commentsFile,
-    templateFile);
   const serveFileContent = createFileContentServer(serveFrom);
-  const handlers = [flowerCatalogHandler, serveFileContent,
+  const loadGuestBookData = createGuestBookDataLoader(commentsFile, templateFile);
+
+  const handlers = [loadGuestBookData, guestBookHandler, serveFileContent,
     fileNotFoundHandler];
 
   startServer(9999, createHandler(handlers));
