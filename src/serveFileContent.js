@@ -38,6 +38,10 @@ const createFileContentServer = (directory) => {
   const fileContents = accumulateFileContents(directory);
 
   return ({ uri }, response) => {
+    if (uri === '/') {
+      uri = '/index.html';
+    }
+
     const fileName = directory + uri;
     const content = fileContents[fileName];
     if (!content) {
