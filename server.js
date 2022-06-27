@@ -7,7 +7,10 @@ const { createFlowerCatalogHandler } = require('./src/flowerCatalogHandler.js');
 const { createFileContentServer } = require('./src/serveFileContent.js');
 const { fileNotFoundHandler } = require('./src/fileNotFoundHandler.js');
 
-const log = (...contents) => fs.appendFile('log.txt', [new Date().toTimeString().split(' ')[0], ...contents, '\n'].join(' '), () => { });
+const log = (...contents) => {
+  const content = [new Date().toLocaleString(), ...contents, '\n'].join(' ');
+  fs.appendFile('log.txt', content, () => { });
+};
 
 const onNewConnection = (socket, handler) => {
   socket.setTimeout(5000);
@@ -36,9 +39,10 @@ const startServer = (PORT, handler) => {
 };
 
 const main = (serveFrom) => {
-  const flowerCatalogHandler =
-    createFlowerCatalogHandler('./data/comments.json',
-      './resources/guest-book-template.html');
+  const commentsFile = './data/comments.json';
+  const templateFile = './resources/guest-book-template.html';
+  const flowerCatalogHandler = createFlowerCatalogHandler(commentsFile,
+    templateFile);
   const serveFileContent = createFileContentServer(serveFrom);
   const handlers = [flowerCatalogHandler, serveFileContent,
     fileNotFoundHandler];

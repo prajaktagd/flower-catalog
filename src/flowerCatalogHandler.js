@@ -5,7 +5,7 @@ const parseComment = ({ name, comment }) => {
   return {
     name,
     comment,
-    dateTime: new Date().toString()
+    dateTime: new Date().toLocaleString()
   };
 };
 
