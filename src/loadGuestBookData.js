@@ -1,17 +1,18 @@
 const fs = require('fs');
+const { GuestBook } = require('./guestBook.js');
 
-const createGuestBookDataLoader = (commentsFile, guestBookTemplateFile) => {
-  let commentsString = fs.readFileSync(commentsFile, 'utf8');
+const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
   let template = fs.readFileSync(guestBookTemplateFile, 'utf8');
+  let commentsString = fs.readFileSync(commentsFile, 'utf8');
 
   let comments = [];
   if (commentsString.length > 0) {
     comments = JSON.parse(commentsString);
   }
+  const guestBook = new GuestBook(template, comments);
 
   return (request, response) => {
-    request.comments = comments;
-    request.template = template;
+    request.guestBook = guestBook;
     request.commentsFile = commentsFile;
     return false;
   };

@@ -34,7 +34,7 @@ const onNewConnection = (socket, handler) => {
 const startServer = (PORT, handler) => {
   const server = createServer((socket) => onNewConnection(socket, handler));
 
-  server.listen(3434, () => {
+  server.listen(PORT, () => {
     log(`Started listening on http://localhost:${server.address().port}`);
   });
 };
@@ -42,8 +42,8 @@ const startServer = (PORT, handler) => {
 const main = (serveFrom) => {
   const commentsFile = './data/comments.json';
   const templateFile = './resources/guest-book-template.html';
+  const loadGuestBookData = createGuestBookDataLoader(templateFile, commentsFile);
   const serveFileContent = createFileContentServer(serveFrom);
-  const loadGuestBookData = createGuestBookDataLoader(commentsFile, templateFile);
 
   const handlers = [loadGuestBookData, guestBookHandler, serveFileContent,
     fileNotFoundHandler];

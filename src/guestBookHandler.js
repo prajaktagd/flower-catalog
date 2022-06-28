@@ -1,16 +1,8 @@
 const fs = require('fs');
-const { generateTable } = require('./generateTable.js');
 
-const parseComment = ({ name, comment }) => {
-  return {
-    name,
-    comment,
-    dateTime: new Date().toLocaleString()
-  };
-};
-
-const commentHandler = ({ params, comments, commentsFile }, response) => {
-  comments.push(parseComment(params));
+const commentsHandler = ({ params, guestBook, commentsFile }, response) => {
+  guestBook.addComment(params.name, params.comment);
+  const comments = guestBook.getComments();
   fs.writeFileSync(commentsFile, JSON.stringify(comments), 'utf8');
 
   response.statusCode = 302;
@@ -19,10 +11,9 @@ const commentHandler = ({ params, comments, commentsFile }, response) => {
   return true;
 };
 
-const guestBookPageCreator = ({ template, comments }, response) => {
-  const html = template.replace('__TABLE__', generateTable(comments));
+const guestBookPageCreator = ({ guestBook }, response) => {
   response.setHeader('content-type', 'text/html');
-  response.send(html);
+  response.send(guestBook.toHtml());
   return true;
 };
 
@@ -33,7 +24,7 @@ const guestBookHandler = (request, response) => {
     return true;
   }
   if (uri === '/add-comment') {
-    commentHandler(request, response);
+    commentsHandler(request, response);
     return true;
   }
   return false;
