@@ -16,8 +16,13 @@ class GuestBook {
     this.#comments = comments;
   }
 
+  #commentsInReverse() {
+    const comments = this.#comments.slice(0);
+    return comments.reverse();
+  }
+
   toHtml() {
-    const tableHtml = generateTable(this.#comments);
+    const tableHtml = generateTable(this.#commentsInReverse());
     return this.#template.replace('__TABLE__', tableHtml);
   }
 

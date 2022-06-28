@@ -1,9 +1,12 @@
 const fs = require('fs');
 
-const commentsHandler = ({ params, guestBook, commentsFile }, response) => {
-  guestBook.addComment(params.name, params.comment);
-  const comments = guestBook.getComments();
-  fs.writeFileSync(commentsFile, JSON.stringify(comments), 'utf8');
+const commentsHandler = ({ params, guestBook, saveComments }, response) => {
+  const { name, comment } = params;
+
+  if (name && comment) {
+    guestBook.addComment(name, comment);
+    saveComments(guestBook.getComments());
+  }
 
   response.statusCode = 302;
   response.setHeader('location', '/guest-book');

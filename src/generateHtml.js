@@ -39,18 +39,4 @@ const generateHtml = ([tag, attributes, ...content]) => {
   return openingTag(tag, attributes) + newContent + closingTag(tag);
 };
 
-// const html = generateHtml(['head', {}, ['title', {}, 'My First Page'], ['link', { rel: 'stylesheet', href: 'styles.css' }]]);
-// console.log(html);
-
 exports.generateHtml = generateHtml;
-
-// const div = (content) => ['div', {}, content];
-
-// // html(['div', {}, ...[1, 2, 3].map(div)]);
-
-// const pokemonCard = (pokemon) => []; //some card;
-
-// const fruits = ['orange', 'banana'];
-// const dom = ['ul', {}, ...fruits.map(li)];
-
-// generateHtml(dom);

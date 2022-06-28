@@ -1,9 +1,14 @@
 const fs = require('fs');
 const { GuestBook } = require('./guestBook.js');
 
+const readData = (fileName) => fs.readFileSync(fileName, 'utf8');
+const writeData = (fileName, content) => {
+  fs.writeFileSync(fileName, content, 'utf8');
+};
+
 const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
-  let template = fs.readFileSync(guestBookTemplateFile, 'utf8');
-  let commentsString = fs.readFileSync(commentsFile, 'utf8');
+  let template = readData(guestBookTemplateFile);
+  let commentsString = readData(commentsFile);
 
   let comments = [];
   if (commentsString.length > 0) {
@@ -13,7 +18,9 @@ const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
 
   return (request, response) => {
     request.guestBook = guestBook;
-    request.commentsFile = commentsFile;
+    request.saveComments = (comments) => {
+      writeData(commentsFile, JSON.stringify(comments));
+    }
     return false;
   };
 };
