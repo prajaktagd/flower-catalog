@@ -31,12 +31,10 @@ const guestBookPageCreator = ({ guestBook }, res) => {
 const guestBookHandler = (req, res) => {
   const { pathname } = req.url;
   if (pathname === '/guest-book') {
-    guestBookPageCreator(req, res);
-    return true;
+    return guestBookPageCreator(req, res);
   }
   if (pathname === '/add-comment') {
-    commentsHandler(req, res);
-    return true;
+    return commentsHandler(req, res);
   }
   return false;
 };

@@ -10,10 +10,7 @@ const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
   let template = readData(guestBookTemplateFile);
   let commentsString = readData(commentsFile);
 
-  let comments = [];
-  if (commentsString.length > 0) {
-    comments = JSON.parse(commentsString);
-  }
+  const comments = commentsString.length > 0 ? JSON.parse(commentsString) : [];
   const guestBook = new GuestBook(template, comments);
 
   return (req, res) => {

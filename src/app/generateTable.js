@@ -13,8 +13,8 @@ const generateTable = (comments) => {
     const trContents = headers.map((header) => tdElement(comment[header]));
     return trElement(trContents);
   });
-  const table = tableElement([headerRow, ...rows]);
-  return generateHtml(table);
+  const tableDOM = tableElement([headerRow, ...rows]);
+  return generateHtml(tableDOM);
 };
 
 exports.generateTable = generateTable;
