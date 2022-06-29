@@ -1,6 +1,6 @@
 const { wrapMethodNotFound } = require('../app/wrapMethodNotFound.js');
 
-const createDynamicHandler = (methodHandlers) => (req, res) => {
+const createRouter = (methodHandlers) => (req, res) => {
   const { pathname } = req.url;
   const handlers = methodHandlers[pathname];
   if (!handlers) {
@@ -10,7 +10,7 @@ const createDynamicHandler = (methodHandlers) => (req, res) => {
   return wrappedHandler(req, res);
 };
 
-const createRouter = (handlers) => (req, res) => {
+const createMainRouter = (handlers) => (req, res) => {
   for (const handler of handlers) {
     if (handler(req, res)) {
       return true;
@@ -19,4 +19,4 @@ const createRouter = (handlers) => (req, res) => {
   return false;
 };
 
-module.exports = { createRouter, createDynamicHandler };
+module.exports = { createMainRouter, createRouter };
