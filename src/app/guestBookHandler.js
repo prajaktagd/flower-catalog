@@ -5,13 +5,14 @@ const getGuestBookParams = ({ searchParams }) => {
   for (const [param, value] of searchParams.entries()) {
     params[param] = value;
   }
+  params.dateTime = new Date().toLocaleString();
   return params;
 };
 
 const commentsHandler = ({ url, guestBook, saveComments }, res) => {
-  const { name, comment } = getGuestBookParams(url);
-  if (name && comment) {
-    guestBook.addComment(name, comment);
+  const params = getGuestBookParams(url);
+  if (params.name && params.comment) {
+    guestBook.addComment(params);
     saveComments(guestBook.getComments());
   }
 
