@@ -14,9 +14,12 @@ const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
   const guestBook = new GuestBook(template, comments);
 
   return (req, res) => {
-    req.guestBook = guestBook;
-    req.saveComments = (comments) => {
-      writeData(commentsFile, JSON.stringify(comments));
+    const { pathname } = req.url;
+    if (['/guest-book', '/add-comment'].includes(pathname)) {
+      req.guestBook = guestBook;
+      req.saveComments = (comments) => {
+        writeData(commentsFile, JSON.stringify(comments));
+      }
     }
     return false;
   };
