@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const getGuestBookParams = ({ searchParams }) => {
   const params = {};
   for (const [param, value] of searchParams.entries()) {
@@ -22,21 +20,10 @@ const commentsHandler = ({ url, guestBook, saveComments }, res) => {
   return true;
 };
 
-const guestBookPageCreator = ({ guestBook }, res) => {
+const guestBookPageCreator = (req, res) => {
   res.setHeader('content-type', 'text/html');
-  res.end(guestBook.toHtml());
+  res.end(req.guestBook.toHtml());
   return true;
 };
 
-const guestBookHandler = (req, res) => {
-  const { pathname } = req.url;
-  if (pathname === '/guest-book') {
-    return guestBookPageCreator(req, res);
-  }
-  if (pathname === '/add-comment') {
-    return commentsHandler(req, res);
-  }
-  return false;
-};
-
-exports.guestBookHandler = guestBookHandler;
+module.exports = { guestBookPageCreator, commentsHandler };

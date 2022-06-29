@@ -6,7 +6,7 @@ const writeData = (fileName, content) => {
   fs.writeFileSync(fileName, content, 'utf8');
 };
 
-const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
+const createGuestBookLoader = (guestBookTemplateFile, commentsFile) => {
   let template = readData(guestBookTemplateFile);
   let commentsString = readData(commentsFile);
 
@@ -19,10 +19,10 @@ const createGuestBookDataLoader = (guestBookTemplateFile, commentsFile) => {
       req.guestBook = guestBook;
       req.saveComments = (comments) => {
         writeData(commentsFile, JSON.stringify(comments));
-      }
+      };
     }
     return false;
   };
 };
 
-exports.createGuestBookDataLoader = createGuestBookDataLoader;
+module.exports = { createGuestBookLoader };

@@ -23,18 +23,14 @@ const accumulateFileContents = (directory) => {
   return contents;
 };
 
-const aliases = {
-  '/': '/index.html'
-};
-
-const serveStaticFrom = (root) => {
+const serveStaticFrom = (root, aliases) => {
   const fileContents = accumulateFileContents(root);
 
-  return ({ url }, res) => {
+  return ({ url, method }, res) => {
     const pathname = aliases[url.pathname] || url.pathname;
     const fileName = root + pathname;
     const content = fileContents[fileName];
-    if (!content) {
+    if (!content || method !== 'GET') {
       return false;
     }
     res.setHeader('content-type', determineContentType(fileName));
