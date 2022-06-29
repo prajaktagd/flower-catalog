@@ -23,11 +23,15 @@ const accumulateFileContents = (directory) => {
   return contents;
 };
 
+const aliases = {
+  '/': '/index.html'
+};
+
 const serveStaticFrom = (root) => {
   const fileContents = accumulateFileContents(root);
 
   return ({ url }, res) => {
-    const pathname = url.pathname === '/' ? '/index.html' : url.pathname;
+    const pathname = aliases[url.pathname] || url.pathname;
     const fileName = root + pathname;
     const content = fileContents[fileName];
     if (!content) {
