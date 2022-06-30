@@ -15,7 +15,8 @@ const createGuestBookLoader = (guestBookTemplateFile, commentsFile) => {
 
   return (req, res) => {
     const { pathname } = req.url;
-    if (['/guest-book', '/guest-book/add-comment'].includes(pathname)) {
+    if (['/guest-book', '/guest-book/add-comment', '/api/guest-book',
+      '/api/guest-book/q'].includes(pathname)) {
       req.guestBook = guestBook;
       req.saveComments = (comments) => {
         writeData(commentsFile, JSON.stringify(comments));

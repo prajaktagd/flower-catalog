@@ -1,5 +1,10 @@
 const { generateTable } = require('./generateTable.js');
 
+const isPresent = (field, commentDetails) => {
+  const values = Object.values(commentDetails);
+  return values.some((value) => value.includes(field));
+};
+
 class GuestBook {
   #template;
   #comments;
@@ -11,6 +16,12 @@ class GuestBook {
   toHtml() {
     const tableHtml = generateTable(this.#comments);
     return this.#template.replace('__TABLE__', tableHtml);
+  }
+
+  searchComments({ name, comment, dateTime }) {
+    const field = name || comment || dateTime;
+    return this.#comments.filter((commentDetails) =>
+      isPresent(field, commentDetails));
   }
 
   addComment(params) {

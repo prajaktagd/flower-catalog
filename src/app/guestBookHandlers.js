@@ -1,15 +1,10 @@
-const getGuestBookParams = ({ searchParams }) => {
-  const params = {};
-  for (const [param, value] of searchParams.entries()) {
-    params[param] = value;
-  }
-  params.dateTime = new Date().toLocaleString();
-  return params;
-};
+const { getQueryParams } = require('./getQueryParams');
 
-const commentsHandler = ({ url, guestBook, saveComments }, res) => {
-  const params = getGuestBookParams(url);
+const commentsAdder = ({ url, guestBook, saveComments }, res) => {
+  const params = getQueryParams(url);
+
   if (params.name && params.comment) {
+    params.dateTime = new Date().toLocaleString();
     guestBook.addComment(params);
     saveComments(guestBook.getComments());
   }
@@ -33,4 +28,4 @@ const guestBookPageCreator = (req, res) => {
   return true;
 };
 
-module.exports = { guestBookPageCreator, commentsHandler };
+module.exports = { guestBookPageCreator, commentsAdder };
