@@ -1,9 +1,8 @@
+const { methodNotSupportedHandler } = require('./methodNotSupportedHandler');
+
 const wrapMethodNotFound = (handlers) => (req, res) => {
   if (!handlers[req.method]) {
-    res.statusCode = 405;
-    res.setHeader('content-type', 'text/plain');
-    res.end(`${req.method} method not allowed`);
-    return true;
+    return methodNotSupportedHandler(req, res);
   }
   const actualHandler = handlers[req.method];
   return actualHandler(req, res);

@@ -2,7 +2,9 @@ const { generateTable } = require('./generateTable.js');
 
 const isPresent = (field, commentDetails) => {
   const values = Object.values(commentDetails);
-  return values.some((value) => value.includes(field));
+  return values.some((value) =>
+    value.toLowerCase().includes(field.toLowerCase())
+  );
 };
 
 class GuestBook {
