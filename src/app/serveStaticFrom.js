@@ -26,16 +26,17 @@ const accumulateFileContents = (directory) => {
 const serveStaticFrom = (root, aliases) => {
   const fileContents = accumulateFileContents(root);
 
-  return ({ url }, res) => {
+  return (req, res, router) => {
+    const { url } = req;
     const pathname = aliases[url.pathname] || url.pathname;
     const fileName = root + pathname;
     const content = fileContents[fileName];
     if (!content) {
-      return false;
+      router(req, res);
+      return;
     }
     res.setHeader('content-type', determineContentType(fileName));
     res.end(content);
-    return true;
   }
 };
 

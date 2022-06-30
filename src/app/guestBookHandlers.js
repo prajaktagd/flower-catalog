@@ -1,7 +1,7 @@
-const { getQueryParams } = require('./getQueryParams');
+const { getParams } = require('./getParams');
 
-const commentsAdder = ({ url, guestBook, saveComments }, res) => {
-  const params = getQueryParams(url);
+const commentsAdder = ({ bodyParams, guestBook, saveComments }, res) => {
+  const params = getParams(bodyParams);
 
   if (params.name && params.comment) {
     params.dateTime = new Date().toLocaleString();
@@ -12,7 +12,6 @@ const commentsAdder = ({ url, guestBook, saveComments }, res) => {
   res.statusCode = 302;
   res.setHeader('location', '/guest-book');
   res.end('');
-  return true;
 };
 
 const guestBookPageCreator = (req, res) => {
@@ -21,11 +20,10 @@ const guestBookPageCreator = (req, res) => {
     const guestBook = req.guestBook.getComments();
     res.setHeader('content-type', 'application/json');
     res.end(JSON.stringify(guestBook));
-    return true;
+    return;
   }
   res.setHeader('content-type', 'text/html');
   res.end(req.guestBook.toHtml());
-  return true;
 };
 
 module.exports = { guestBookPageCreator, commentsAdder };

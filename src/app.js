@@ -3,8 +3,9 @@ const { serveStaticFrom } = require('./app/serveStaticFrom.js');
 const { notFoundHandler } = require('./app/notFoundHandler.js');
 const { createGuestBookLoader } = require('./app/loadGuestBook.js');
 const { guestBookPageCreator, commentsAdder } = require('./app/guestBookHandlers.js');
-const { guestBookApiHandler, guestBookQueryHandler } = require('./apiHandlers.js');
+const { guestBookApiHandler, guestBookQueryHandler } = require('./app/apiHandlers.js');
 const { methodNotSupportedHandler } = require('./app/methodNotSupportedHandler.js');
+const parseBodyParams = require('./app/parseBodyParams.js');
 
 const app = (serveFrom) => {
   const commentsFile = './data/comments.json';
@@ -12,7 +13,7 @@ const app = (serveFrom) => {
 
   const guestBookHandlers = {
     '/guest-book': { 'GET': guestBookPageCreator },
-    '/guest-book/add-comment': { 'GET': commentsAdder }
+    '/guest-book/add-comment': { 'POST': commentsAdder }
   };
 
   const apiHandlers = {
@@ -27,7 +28,7 @@ const app = (serveFrom) => {
   const apiRouter = createRouter(apiHandlers);
   const serveStaticHandler = serveStaticFrom(serveFrom, aliases);
 
-  const handlers = [loadGuestBook, guestBookRouter, apiRouter,
+  const handlers = [parseBodyParams, loadGuestBook, guestBookRouter, apiRouter,
     methodNotSupportedHandler, serveStaticHandler, notFoundHandler];
   return createMainRouter(handlers);
 };

@@ -13,7 +13,7 @@ const createGuestBookLoader = (guestBookTemplateFile, commentsFile) => {
   const comments = commentsString.length > 0 ? JSON.parse(commentsString) : [];
   const guestBook = new GuestBook(template, comments);
 
-  return (req, res) => {
+  return (req, res, router) => {
     const { pathname } = req.url;
     if (['/guest-book', '/guest-book/add-comment', '/api/guest-book',
       '/api/guest-book/q'].includes(pathname)) {
@@ -22,7 +22,7 @@ const createGuestBookLoader = (guestBookTemplateFile, commentsFile) => {
         writeData(commentsFile, JSON.stringify(comments));
       };
     }
-    return false;
+    router(req, res);
   };
 };
 
