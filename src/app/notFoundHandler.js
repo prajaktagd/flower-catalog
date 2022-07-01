@@ -1,7 +1,7 @@
-const notFoundHandler = (req, res) => {
+const notFoundHandler = ({ url }, res) => {
   res.statusCode = 404;
   res.setHeader('content-type', 'text/plain');
-  res.end(`${req.url.pathname} Not Found`);
+  res.end(`${url.pathname} Not Found`);
 };
 
 module.exports = { notFoundHandler };

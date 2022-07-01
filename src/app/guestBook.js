@@ -2,6 +2,7 @@ const { generateTable } = require('./generateTable.js');
 
 const isPresent = (field, commentDetails) => {
   const values = Object.values(commentDetails);
+
   return values.some((value) =>
     value.toLowerCase().includes(field.toLowerCase())
   );
@@ -10,6 +11,7 @@ const isPresent = (field, commentDetails) => {
 class GuestBook {
   #template;
   #comments;
+
   constructor(template, comments) {
     this.#template = template;
     this.#comments = comments;
@@ -22,6 +24,7 @@ class GuestBook {
 
   searchComments({ name, comment, dateTime }) {
     const field = name || comment || dateTime;
+
     return this.#comments.filter((commentDetails) =>
       isPresent(field, commentDetails));
   }

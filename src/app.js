@@ -1,11 +1,14 @@
-const { createMainRouter, createRouter } = require('./server/router.js');
-const { serveStaticFrom } = require('./app/serveStaticFrom.js');
+const { fetchBodyParams } = require('./app/fetchBodyParams.js');
+const { createInitiator, createRouter } = require('./server/router.js');
 const { notFoundHandler } = require('./app/notFoundHandler.js');
-const { createGuestBookLoader } = require('./app/loadGuestBook.js');
-const { guestBookPageCreator, commentsAdder } = require('./app/guestBookHandlers.js');
-const { guestBookApiHandler, guestBookQueryHandler } = require('./app/apiHandlers.js');
 const { methodNotSupportedHandler } = require('./app/methodNotSupportedHandler.js');
-const parseBodyParams = require('./app/parseBodyParams.js');
+const { serveStaticFrom } = require('./app/serveStatic.js');
+const { createGuestBookLoader } = require('./app/loadGuestBook.js');
+
+const guestBookLib = require('./app/guestBookHandlers.js');
+const apiLib = require('./app/apiHandlers.js');
+const { guestBookPageCreator, commentsAdder } = guestBookLib;
+const { guestBookApiHandler, guestBookQueryHandler } = apiLib;
 
 const app = (serveFrom) => {
   const commentsFile = './data/comments.json';
@@ -18,7 +21,7 @@ const app = (serveFrom) => {
 
   const apiHandlers = {
     '/api/guest-book': { 'GET': guestBookApiHandler },
-    '/api/guest-book/q': { 'GET': guestBookQueryHandler },
+    '/api/guest-book/q': { 'GET': guestBookQueryHandler }
   };
 
   const aliases = { '/': '/index.html' };
@@ -26,11 +29,19 @@ const app = (serveFrom) => {
   const loadGuestBook = createGuestBookLoader(templateFile, commentsFile);
   const guestBookRouter = createRouter(guestBookHandlers);
   const apiRouter = createRouter(apiHandlers);
-  const serveStaticHandler = serveStaticFrom(serveFrom, aliases);
+  const serveStatic = serveStaticFrom(serveFrom, aliases);
 
-  const handlers = [parseBodyParams, loadGuestBook, guestBookRouter, apiRouter,
-    methodNotSupportedHandler, serveStaticHandler, notFoundHandler];
-  return createMainRouter(handlers);
+  const handlers = [
+    fetchBodyParams,
+    loadGuestBook,
+    guestBookRouter,
+    apiRouter,
+    methodNotSupportedHandler,
+    serveStatic,
+    notFoundHandler
+  ];
+
+  return createInitiator(handlers);
 };
 
 module.exports = { app };

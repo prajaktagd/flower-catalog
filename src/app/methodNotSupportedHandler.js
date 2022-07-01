@@ -1,12 +1,11 @@
-const methodNotSupportedHandler = (req, res, router) => {
-  const { method } = req;
+const methodNotSupportedHandler = ({ method }, res, next) => {
   if (method !== 'GET') {
     res.statusCode = 405;
     res.setHeader('content-type', 'text/plain');
     res.end(`${method} method not allowed`);
     return;
   }
-  router(req, res);
+  next();
 };
 
 module.exports = { methodNotSupportedHandler };

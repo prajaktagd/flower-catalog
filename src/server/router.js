@@ -1,31 +1,34 @@
 const { wrapMethodNotFound } = require('../app/wrapMethodNotFound.js');
 
-const createRouter = (methodHandlers) => (req, res, router) => {
+const createRouter = (methodHandlers) => (req, res, next) => {
   const { pathname } = req.url;
   const handlers = methodHandlers[pathname];
   if (!handlers) {
-    router(req, res);
+    next();
     return;
   }
+
   const wrappedHandler = wrapMethodNotFound(handlers);
-  wrappedHandler(req, res, router);
+  wrappedHandler(req, res, next);
 };
 
-const createSubRouter = (handlers) => {
+const createNextCaller = (handlers) => {
   let index = -1;
-  const subRouter = (req, res) => {
+
+  const callNext = (req, res) => {
     index++;
     const currentHandler = handlers[index];
     if (currentHandler) {
-      currentHandler(req, res, subRouter);
+      currentHandler(req, res, () => callNext(req, res));
     }
   };
-  return subRouter;
+
+  return callNext;
 };
 
-const createMainRouter = (handlers) => (req, res) => {
-  const subRouter = createSubRouter(handlers);
-  subRouter(req, res);
+const createInitiator = (handlers) => (req, res) => {
+  const callNext = createNextCaller(handlers);
+  callNext(req, res);
 };
 
-module.exports = { createMainRouter, createRouter };
+module.exports = { createInitiator, createRouter };

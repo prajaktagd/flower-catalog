@@ -14,16 +14,16 @@ const commentsAdder = ({ bodyParams, guestBook, saveComments }, res) => {
   res.end('');
 };
 
-const guestBookPageCreator = (req, res) => {
-  const { accept } = req.headers;
-  if (accept === 'application/json') {
-    const guestBook = req.guestBook.getComments();
+const guestBookPageCreator = ({ guestBook, headers }, res) => {
+  if (headers.accept === 'application/json') {
+    const comments = guestBook.getComments();
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify(guestBook));
+    res.end(JSON.stringify(comments));
     return;
   }
+
   res.setHeader('content-type', 'text/html');
-  res.end(req.guestBook.toHtml());
+  res.end(guestBook.toHtml());
 };
 
 module.exports = { guestBookPageCreator, commentsAdder };

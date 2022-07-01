@@ -9,10 +9,12 @@ const trElement = (contents) => ['tr', {}, ...contents];
 const generateTable = (comments) => {
   const headers = getHeaders();
   const headerRow = trElement(headers.map(thElement));
+
   const rows = comments.map((comment) => {
     const trContents = headers.map((header) => tdElement(comment[header]));
     return trElement(trContents);
   });
+
   const tableDOM = tableElement([headerRow, ...rows]);
   return generateHtml(tableDOM);
 };

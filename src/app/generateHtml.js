@@ -32,6 +32,7 @@ const generateHtml = ([tag, attributes, ...content]) => {
   if (isSelfContained(tag)) {
     return stringifySelfContainedTag(tag, attributes);
   }
+
   const newContent = content.map(element => {
     return Array.isArray(element) ? generateHtml(element) : element
   }).join('');

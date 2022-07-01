@@ -1,10 +1,10 @@
-const http = require('http');
-const { URL } = require('url');
+const { createServer } = require('http');
 
 const startServer = (PORT, handler) => {
-  const server = http.createServer((req, res) => {
+  const server = createServer((req, res) => {
     console.log(req.method, req.url);
-    req.url = new URL(req.url, 'http://' + req.headers.host);
+    const base = 'http://' + req.headers.host;
+    req.url = new URL(req.url, base);
     handler(req, res);
   });
 

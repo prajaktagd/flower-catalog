@@ -1,12 +1,12 @@
 const { methodNotSupportedHandler } = require('./methodNotSupportedHandler');
 
-const wrapMethodNotFound = (handlers) => (req, res, router) => {
+const wrapMethodNotFound = (handlers) => (req, res, next) => {
   if (!handlers[req.method]) {
-    methodNotSupportedHandler(req, res, router);
+    methodNotSupportedHandler(req, res, next);
     return;
   }
   const actualHandler = handlers[req.method];
-  actualHandler(req, res, router);
+  actualHandler(req, res, next);
 };
 
 module.exports = { wrapMethodNotFound };

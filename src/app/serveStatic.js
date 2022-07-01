@@ -26,18 +26,17 @@ const accumulateFileContents = (directory) => {
 const serveStaticFrom = (root, aliases) => {
   const fileContents = accumulateFileContents(root);
 
-  return (req, res, router) => {
-    const { url } = req;
+  return ({ url }, res, next) => {
     const pathname = aliases[url.pathname] || url.pathname;
     const fileName = root + pathname;
     const content = fileContents[fileName];
     if (!content) {
-      router(req, res);
+      next();
       return;
     }
     res.setHeader('content-type', determineContentType(fileName));
     res.end(content);
-  }
+  };
 };
 
 module.exports = { serveStaticFrom };
