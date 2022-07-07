@@ -5,6 +5,10 @@ body {
   font-size: 18px;
 }
 
+.hide {
+  visibility: hidden;
+}
+
 h1,
 h2 {
   color: orange;
