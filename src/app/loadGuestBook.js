@@ -1,8 +1,5 @@
-const fs = require('fs');
 const { GuestBook } = require('./guestBook.js');
-
-const read = (file) => fs.readFileSync(file, 'utf8');
-const write = (file, content) => fs.writeFileSync(file, content, 'utf8');
+const { read, write } = require('./readWrite.js');
 
 const createGuestBookLoader = (templateFile, commentsFile) => {
   let template = read(templateFile);
