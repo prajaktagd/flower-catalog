@@ -9,8 +9,10 @@ const { injectSession } = require('./app/injectSession.js');
 
 const guestBookLib = require('./app/guestBookHandlers.js');
 const apiLib = require('./app/apiHandlers.js');
-const { guestBookPageCreator, commentsAdder, loginHandler, serveLoginForm, logoutHandler } = guestBookLib;
+const loginLib = require('./app/loginHandlers.js');
+const { guestBookPageCreator, commentsAdder } = guestBookLib;
 const { guestBookApiHandler, guestBookQueryHandler } = apiLib;
+const { loginHandler, serveLoginForm, logoutHandler } = loginLib;
 
 const app = (serveFrom) => {
   const commentsFile = './data/comments.json';
@@ -19,7 +21,10 @@ const app = (serveFrom) => {
 
   const guestBookHandlers = {
     '/guest-book': { 'GET': guestBookPageCreator },
-    '/guest-book/add-comment': { 'POST': commentsAdder },
+    '/guest-book/add-comment': { 'POST': commentsAdder }
+  };
+
+  const loginHandlers = {
     '/login': { 'GET': serveLoginForm, 'POST': loginHandler(sessions) },
     '/logout': { 'GET': logoutHandler(sessions) }
   };
@@ -32,6 +37,7 @@ const app = (serveFrom) => {
   const aliases = { '/': '/index.html' };
 
   const loadGuestBook = createGuestBookLoader(templateFile, commentsFile);
+  const loginRouter = createRouter(loginHandlers);
   const guestBookRouter = createRouter(guestBookHandlers);
   const apiRouter = createRouter(apiHandlers);
   const serveStatic = serveStaticFrom(serveFrom, aliases);
@@ -40,6 +46,7 @@ const app = (serveFrom) => {
     injectCookies,
     injectSession(sessions),
     fetchBodyParams,
+    loginRouter,
     loadGuestBook,
     guestBookRouter,
     apiRouter,
