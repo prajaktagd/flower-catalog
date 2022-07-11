@@ -3,6 +3,7 @@
   <head>
     <title>Guest Book</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/guestBookScript.js"></script>
   </head>
 
   <body>
@@ -10,7 +11,7 @@
       <h2><a href="index.html">&lt;&lt;</a>Guest Book</h2>
       <div><a href="/logout">Logout</a></div>
       <h4>Leave a comment</h4>
-      <form action="guest-book/add-comment" method="post">
+      <form>
         <div>
           <label>Name:</label>
           <input type="text" name="name">
@@ -20,12 +21,21 @@
           <textarea name="comment" cols="30" rows="3"></textarea>
         </div>
         <div>
-          <input type="submit" value="Submit">
+          <button id="submit" type="button">Submit</button>
         </div>
       </form>
       <section>
         <h4>Comments</h4>
-        __TABLE__
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Comment</th>
+              <th>DateTime</th>
+            </tr>
+          </thead>
+          __TBODY__
+        </table>
       </section>
     </main>
   </body>

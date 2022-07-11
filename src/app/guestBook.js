@@ -19,7 +19,7 @@ class GuestBook {
 
   toHtml() {
     const tableHtml = generateTable(this.#comments);
-    return this.#template.replace('__TABLE__', tableHtml);
+    return this.#template.replace('__TBODY__', tableHtml);
   }
 
   searchComments({ name, comment, dateTime }) {

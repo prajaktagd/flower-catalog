@@ -3,14 +3,15 @@ const { getParams } = require('./getParams');
 const commentsAdder = ({ bodyParams, guestBook, saveComments }, res) => {
   const params = getParams(bodyParams);
 
-  if (params.name && params.comment) {
-    params.dateTime = new Date().toLocaleString();
-    guestBook.addComment(params);
-    saveComments(guestBook.getComments());
+  if (!params.name || !params.comment) {
+    res.statusCode = 400;
+    res.end();
+    return;
   }
 
-  res.statusCode = 302;
-  res.setHeader('location', '/guest-book');
+  params.dateTime = new Date().toLocaleString();
+  guestBook.addComment(params);
+  saveComments(guestBook.getComments());
   res.end();
 };
 
