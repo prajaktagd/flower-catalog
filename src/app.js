@@ -3,10 +3,12 @@ const { createInitiator, createRouter } = require('./server/router.js');
 const { notFoundHandler } = require('./app/notFoundHandler.js');
 const { methodNotSupportedHandler } = require('./app/methodNotSupportedHandler.js');
 const { serveStaticFrom } = require('./app/serveStatic.js');
-const { createGuestBookLoader } = require('./app/loadGuestBook.js');
-const { createRegisterLoader } = require('./app/loadRegister.js');
 const { injectCookies } = require('./app/injectCookies.js');
 const { injectSession } = require('./app/injectSession.js');
+const { injectUrl } = require('./app/injectUrl.js');
+const { logHandler } = require('./app/logHandler.js');
+const { createGuestBookLoader } = require('./app/loadGuestBook.js');
+const { createRegisterLoader } = require('./app/loadRegister.js');
 const { fileUploadHandler } = require('./app/fileUploadHandler.js');
 
 const guestBookLib = require('./app/guestBookHandlers.js');
@@ -55,6 +57,8 @@ const app = (serveFrom = 'public') => {
   const fileUploadRouter = createRouter(fileUploadHandlers);
 
   const handlers = [
+    logHandler,
+    injectUrl,
     injectCookies,
     injectSession(sessions),
     fetchBodyParams,
