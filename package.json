@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watchtest": "mocha -w -R dot",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,8 @@
   "homepage": "https://github.com/prajaktagd/flower-catalog#readme",
   "dependencies": {
     "mime-types": "^2.1.35"
+  },
+  "devDependencies": {
+    "supertest": "^6.2.4"
   }
 }
