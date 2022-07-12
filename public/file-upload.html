@@ -1,22 +1,22 @@
 <html>
 
   <head>
-    <title>Signup</title>
+    <title>File Upload</title>
   </head>
 
   <body>
-    <h1>Signup</h1>
-    <form action="/signup" method="post">
+    <h1>File Upload</h1>
+    <form action="/file-upload" method="post" enctype="multipart/form-data">
       <div>
-        <label>Name: </label>
-        <input type="text" name="name">
+        <label>File</label>
+        <input type="file" name="file" multiple>
       </div>
       <div>
-        <label>Username: </label>
+        <label>Username</label>
         <input type="text" name="username">
       </div>
       <div>
-        <label>Password: </label>
+        <label>password</label>
         <input type="password" name="password">
       </div>
       <div>

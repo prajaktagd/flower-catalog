@@ -7,6 +7,7 @@ const { createGuestBookLoader } = require('./app/loadGuestBook.js');
 const { createRegisterLoader } = require('./app/loadRegister.js');
 const { injectCookies } = require('./app/injectCookies.js');
 const { injectSession } = require('./app/injectSession.js');
+const { fileUploadHandler } = require('./app/fileUploadHandler.js');
 
 const guestBookLib = require('./app/guestBookHandlers.js');
 const apiLib = require('./app/apiHandlers.js');
@@ -17,7 +18,7 @@ const { guestBookApiHandler, guestBookQueryHandler } = apiLib;
 const { loginHandler, serveLoginForm, logoutHandler } = loginLib;
 const { serveSignupPage, registerUser } = signupLib;
 
-const app = (serveFrom) => {
+const app = (serveFrom = 'public') => {
   const usersFile = './data/users.json';
   const commentsFile = './data/comments.json';
   const templateFile = './resources/guest-book-template.html';
@@ -26,6 +27,10 @@ const app = (serveFrom) => {
   const guestBookHandlers = {
     '/guest-book': { 'GET': guestBookPageCreator },
     '/guest-book/add-comment': { 'POST': commentsAdder }
+  };
+
+  const fileUploadHandlers = {
+    '/file-upload': { 'POST': fileUploadHandler }
   };
 
   const loginHandlers = {
@@ -47,6 +52,7 @@ const app = (serveFrom) => {
   const guestBookRouter = createRouter(guestBookHandlers);
   const apiRouter = createRouter(apiHandlers);
   const serveStatic = serveStaticFrom(serveFrom, aliases);
+  const fileUploadRouter = createRouter(fileUploadHandlers);
 
   const handlers = [
     injectCookies,
@@ -54,6 +60,7 @@ const app = (serveFrom) => {
     fetchBodyParams,
     loadRegister,
     loginRouter,
+    fileUploadRouter,
     loadGuestBook,
     guestBookRouter,
     apiRouter,
