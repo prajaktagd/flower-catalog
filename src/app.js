@@ -15,20 +15,17 @@ const guestBookLib = require('./app/guestBookHandlers.js');
 const apiLib = require('./app/apiHandlers.js');
 const loginLib = require('./app/loginHandlers.js');
 const signupLib = require('./app/signupHandlers.js');
-const { guestBookPageCreator, commentsAdder } = guestBookLib;
+const { guestBookPageCreator, commentAdder } = guestBookLib;
 const { guestBookApiHandler, guestBookQueryHandler } = apiLib;
 const { loginHandler, serveLoginForm, logoutHandler } = loginLib;
 const { serveSignupPage, registerUser } = signupLib;
 
-const app = (serveFrom = 'public') => {
-  const usersFile = './data/users.json';
-  const commentsFile = './data/comments.json';
-  const templateFile = './resources/guest-book-template.html';
-  const sessions = {};
+const createApp = (flowerCatalogConfig, sessions = {}) => {
+  const { usersFile, commentsFile, templateFile, serveFrom } = flowerCatalogConfig;
 
   const guestBookHandlers = {
     '/guest-book': { 'GET': guestBookPageCreator },
-    '/guest-book/add-comment': { 'POST': commentsAdder }
+    '/guest-book/add-comment': { 'POST': commentAdder }
   };
 
   const fileUploadHandlers = {
@@ -76,4 +73,4 @@ const app = (serveFrom = 'public') => {
   return createInitiator(handlers);
 };
 
-module.exports = { app };
+module.exports = { createApp };

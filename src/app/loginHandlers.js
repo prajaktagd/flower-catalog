@@ -11,27 +11,7 @@ const logoutHandler = (sessions) => ({ session }, res) => {
   res.end();
 };
 
-const loginPage = () => `<html>
-<head>
-  <title>Login</title>
-</head>
-<body>
-  <h1>LOGIN</h1>
-  <form action="/login" method="post">
-    <div>
-      <label>Username: </label>
-      <input type="text" name="username">
-    </div>
-    <div>
-      <label>Password: </label>
-      <input type="password" name="password">
-    </div>
-    <div>
-      <input type="submit" value="Submit">
-    </div>
-  </form>
-</body>
-</html>`;
+const loginPage = () => `<html><head><title>Login</title></head><body><h1>LOGIN</h1><form action="/login" method="post"><div><label>Username: </label><input type="text" name="username"></div><div><label>Password: </label><input type="password" name="password"></div><div><input type="submit" value="Submit"></div></form></body></html>`;
 
 const serveLoginForm = ({ session }, res) => {
   if (session) {

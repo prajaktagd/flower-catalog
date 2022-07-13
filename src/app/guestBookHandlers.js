@@ -1,7 +1,15 @@
 const { getParams } = require('./getParams');
 
-const commentsAdder = ({ bodyParams, guestBook, saveComments }, res) => {
+const commentAdder = (req, res) => {
+  const { bodyParams, guestBook, saveComments, session } = req;
   const params = getParams(bodyParams);
+
+  if (!session) {
+    res.statusCode = 302;
+    res.setHeader('location', '/login');
+    res.end();
+    return;
+  }
 
   if (!params.name || !params.comment) {
     res.statusCode = 400;
@@ -34,4 +42,4 @@ const guestBookPageCreator = ({ guestBook, headers, session }, res) => {
   res.end(guestBook.toHtml());
 };
 
-module.exports = { guestBookPageCreator, commentsAdder };
+module.exports = { guestBookPageCreator, commentAdder };
