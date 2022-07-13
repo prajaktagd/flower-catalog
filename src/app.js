@@ -6,7 +6,6 @@ const { serveStaticFrom } = require('./app/serveStatic.js');
 const { injectCookies } = require('./app/injectCookies.js');
 const { injectSession } = require('./app/injectSession.js');
 const { injectUrl } = require('./app/injectUrl.js');
-const { logHandler } = require('./app/logHandler.js');
 const { createGuestBookLoader } = require('./app/loadGuestBook.js');
 const { createRegisterLoader } = require('./app/loadRegister.js');
 const { fileUploadHandler } = require('./app/fileUploadHandler.js');
@@ -20,7 +19,10 @@ const { guestBookApiHandler, guestBookQueryHandler } = apiLib;
 const { loginHandler, serveLoginForm, logoutHandler } = loginLib;
 const { serveSignupPage, registerUser } = signupLib;
 
-const createApp = (flowerCatalogConfig, sessions = {}) => {
+const doNothing = (req, res, next) => next();
+
+const createApp = (flowerCatalogConfig, sessions = {},
+  fileLogger = doNothing) => {
   const { usersFile, commentsFile, templateFile, serveFrom } = flowerCatalogConfig;
 
   const guestBookHandlers = {
@@ -54,7 +56,7 @@ const createApp = (flowerCatalogConfig, sessions = {}) => {
   const fileUploadRouter = createRouter(fileUploadHandlers);
 
   const handlers = [
-    logHandler,
+    fileLogger,
     injectUrl,
     injectCookies,
     injectSession(sessions),

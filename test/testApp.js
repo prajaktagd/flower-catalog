@@ -108,7 +108,7 @@ describe('Without session', () => {
       request(app)
         .get('/signup')
         .expect('content-type', 'text/html')
-        .expect('content-length', '481')
+        .expect('content-length', '535')
         .expect(/Signup/)
         .expect(200, done);
     });
@@ -117,17 +117,15 @@ describe('Without session', () => {
       request(app)
         .post('/signup')
         .send('name=Harshada&username=Harshu&password=9876')
-        .expect('location', '/login')
-        .expect(302, done);
+        .expect(200, done);
     });
 
-    it('should redirect to /signup if user credentials are not provided for POST /signup',
+    it('should provide 400 if user credentials are not provided for POST /signup',
       (done) => {
         request(app)
           .post('/signup')
           .send('')
-          .expect('location', '/signup')
-          .expect(302, done);
+          .expect(400, done);
       });
   });
 
@@ -197,7 +195,7 @@ describe('With Session', () => {
           .expect(200, done);
       });
 
-    it('should get 400 if comment is not provided for POST /guest-book/add-comment',
+    it('should provide 400 if comment is not provided for POST /guest-book/add-comment',
       (done) => {
         request(createApp(config, sessions))
           .post('/guest-book/add-comment')
