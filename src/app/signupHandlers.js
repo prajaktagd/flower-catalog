@@ -3,10 +3,12 @@ const { getParams } = require('./getParams.js');
 const signupPage = () => `<html>
 <head>
   <title>Signup</title>
+  <script src="js/signupScript.js"></script>
 </head>
 <body>
   <h1>Signup</h1>
-  <form action="/signup" method="post">
+  <div id="message"></div>
+  <form>
     <div>
       <label>Name: </label>
       <input type="text" name="name">
@@ -20,7 +22,7 @@ const signupPage = () => `<html>
       <input type="password" name="password">
     </div>
     <div>
-      <input type="submit" value="Submit">
+      <button id="submit" type="button">Submit</button>
     </div>
   </form>
 </body>
@@ -35,15 +37,14 @@ const registerUser = ({ bodyParams, users, persistUsers }, res) => {
   const userDetails = getParams(bodyParams);
   const { name, username, password } = userDetails;
 
-  let location = '/signup';
-  if (name && username && password) {
-    users.push(userDetails);
-    persistUsers(users);
-    location = '/login';
+  if (!name || !username || !password) {
+    res.statusCode = 400;
+    res.end();
+    return;
   }
 
-  res.statusCode = 302;
-  res.setHeader('location', location);
+  users.push(userDetails);
+  persistUsers(users);
   res.end();
 };
 
