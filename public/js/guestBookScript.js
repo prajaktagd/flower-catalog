@@ -48,8 +48,9 @@
   const sendAddCommentReq = (event) => {
     const formElement = document.querySelector('form');
     const formData = new FormData(formElement);
-    const body = parseFormData(formData).join('&');
-
+    const body = new URLSearchParams(formData);
+    // const body = parseFormData(formData).join('&');
+    console.log(body);
     performXHR('POST', '/guest-book/add-comment', handleAddCommentRes, body);
     formElement.reset();
   };

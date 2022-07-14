@@ -20,8 +20,8 @@ describe('Without session', () => {
     it('should send not found respose for GET /hello', (done) => {
       request(app)
         .get('/hello')
-        .expect('content-type', 'text/plain')
-        .expect('/hello Not Found')
+        .expect('content-type', 'text/html; charset=utf-8')
+        .expect(/Cannot GET \/hello/)
         .expect(404, done);
     });
   });
@@ -30,9 +30,9 @@ describe('Without session', () => {
     it('should send method not supported for PUT /hello', (done) => {
       request(app)
         .put('/hello')
-        .expect('content-type', 'text/plain')
-        .expect('PUT method not allowed')
-        .expect(405, done);
+        .expect('content-type', 'text/html; charset=utf-8')
+        .expect(/Cannot PUT \/hello/)
+        .expect(404, done);
     });
   });
 
@@ -40,8 +40,8 @@ describe('Without session', () => {
     it('should serve index.html for GET /index.html', (done) => {
       request(app)
         .get('/index.html')
-        .expect('content-length', '1145')
-        .expect('content-type', 'text/html')
+        .expect('content-length', '1166')
+        .expect('content-type', 'text/html; charset=UTF-8')
         .expect(/Flower Catalog/)
         .expect(200, done);
     });
@@ -49,8 +49,8 @@ describe('Without session', () => {
     it('should serve index.html for GET /', (done) => {
       request(app)
         .get('/')
-        .expect('content-length', '1145')
-        .expect('content-type', 'text/html')
+        .expect('content-length', '1166')
+        .expect('content-type', 'text/html; charset=UTF-8')
         .expect(/Flower Catalog/)
         .expect(200, done);
     });
@@ -59,9 +59,9 @@ describe('Without session', () => {
   describe('Login, Logout and Signup', () => {
     it('should serve login page for GET /login', (done) => {
       request(app)
-        .get('/login')
+        .get('/protected/login')
         .expect('content-type', 'text/html')
-        .expect('content-length', '309')
+        .expect('content-length', '319')
         .expect(/LOGIN/)
         .expect(200, done);
     });
@@ -69,7 +69,7 @@ describe('Without session', () => {
     it('should get 400 if user credentials are not provided for POST /login',
       (done) => {
         request(app)
-          .post('/login')
+          .post('/protected/login')
           .send('')
           .expect('content-type', 'text/plain')
           .expect('content-length', '24')
@@ -80,16 +80,16 @@ describe('Without session', () => {
     it('should redirect to /login if user details are invalid for POST /login',
       (done) => {
         request(app)
-          .post('/login')
+          .post('/protected/login')
           .send('username=abc&password=123')
-          .expect('location', '/login')
+          .expect('location', '/protected/login')
           .expect(302, done);
       });
 
     it('should redirect to /guest-book if user details are valid for POST /login',
       (done) => {
         request(app)
-          .post('/login')
+          .post('/protected/login')
           .send('username=praju&password=123')
           .expect('set-cookie', /sessionId=/)
           .expect('location', '/guest-book')
@@ -99,14 +99,14 @@ describe('Without session', () => {
     it('should redirect to / if session is not set for GET /logout',
       (done) => {
         request(app)
-          .get('/logout')
+          .get('/protected/logout')
           .expect('location', '/')
           .expect(302, done);
       });
 
     it('should serve signup page for GET /signup', (done) => {
       request(app)
-        .get('/signup')
+        .get('/protected/signup')
         .expect('content-type', 'text/html')
         .expect('content-length', '535')
         .expect(/Signup/)
@@ -115,7 +115,7 @@ describe('Without session', () => {
 
     it('should register user for POST /signup', (done) => {
       request(app)
-        .post('/signup')
+        .post('/protected/signup')
         .send('name=Harshada&username=Harshu&password=9876')
         .expect(200, done);
     });
@@ -123,7 +123,7 @@ describe('Without session', () => {
     it('should provide 400 if user credentials are not provided for POST /signup',
       (done) => {
         request(app)
-          .post('/signup')
+          .post('/protected/signup')
           .send('')
           .expect(400, done);
       });
@@ -134,7 +134,7 @@ describe('Without session', () => {
       (done) => {
         request(app)
           .get('/guest-book')
-          .expect('location', '/login')
+          .expect('location', '/protected/login')
           .expect(302, done);
       });
   });
@@ -217,7 +217,7 @@ describe('With Session', () => {
     it('should redirect to guest book if session is set for GET /login',
       (done) => {
         request(createApp(config, sessions))
-          .get('/login')
+          .get('/protected/login')
           .set('cookie', 'sessionId=111')
           .expect('location', '/guest-book')
           .expect(302, done);
@@ -225,7 +225,7 @@ describe('With Session', () => {
 
     it('should logout for GET /logout', (done) => {
       request(createApp(config, sessions))
-        .get('/logout')
+        .get('/protected/logout')
         .set('cookie', 'sessionId=111')
         .expect('set-cookie', 'sessionId=0;max-Age=0')
         .expect('location', '/')

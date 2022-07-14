@@ -1,6 +1,5 @@
-const { startServer } = require('./src/server/server.js');
 const { createApp } = require('./src/app.js');
-const { logHandler } = require('./src/app/logHandler.js');
+const { logHandler } = require('./src/logHandler.js');
 
 const flowerCatalogConfig = {
   templateFile: './resources/guest-book-template.html',
@@ -10,4 +9,4 @@ const flowerCatalogConfig = {
 };
 
 const app = createApp(flowerCatalogConfig, {}, logHandler);
-startServer(9999, app);
+app.listen(9999, () => console.log(`Started listening on 9999`));

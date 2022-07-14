@@ -1,14 +1,5 @@
 (function () {
-  const innerHtml = () => 'Registered Successfully&nbsp<a href="/login">Login</a>';
-
-  const parseFormData = (formData) => {
-    const parsedFormData = [];
-    for (const [field, value] of formData) {
-      const paramString = field + '=' + value;
-      parsedFormData.push(paramString);
-    }
-    return parsedFormData;
-  };
+  const innerHtml = () => 'Registered Successfully&nbsp<a href="/protected/login">Login</a>';
 
   const performXHR = (method, url, callback, body = '') => {
     const xhr = new XMLHttpRequest();
@@ -29,9 +20,9 @@
   const sendRegisterUserReq = (event) => {
     const formElement = document.querySelector('form');
     const formData = new FormData(formElement);
-    const body = parseFormData(formData).join('&');
+    const body = new URLSearchParams(formData);
 
-    performXHR('POST', '/signup', displayMessage, body);
+    performXHR('POST', '/protected/signup', displayMessage, body);
     formElement.reset();
   };
 
